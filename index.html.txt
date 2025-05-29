@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One stop HTML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+
+    <style>
+        /* Custom CSS for draggable/resizable panels and overall layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevent scrollbars from main body */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            /* Default light theme colors, overridden by theme classes */
+            background-color: #f0f2f5;
+            color: #333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- Theme Definitions --- */
+
+        /* Light Theme (Default) */
+        body.light-theme {
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        body.light-theme .header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .panel {
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .panel-header {
+            background-color: #edf2f7;
+            border-color: #e2e8f0;
+            color: #333;
+        }
+        body.light-theme .settings-modal-content {
+            background-color: #ffffff;
+            color: #333;
+        }
+        body.light-theme .settings-modal-content h2 {
+            color: #333;
+        }
+        body.light-theme .settings-group label {
+            color: #4a5568;
+        }
+        body.light-theme .settings-group select,
+        body.light-theme .settings-group input[type="range"] {
+            background-color: #edf2f7;
+            border-color: #cbd5e0;
+            color: #333;
+        }
+        body.light-theme .settings-actions button.cancel {
+            background-color: #e2e8f0;
+            color: #4a5568;
+        }
+        body.light-theme .settings-actions button.cancel:hover {
+            background-color: #cbd5e0;
+        }
+
+        /* Dark Theme */
+        body.dark-theme {
+            background-color: #1a202c; /* Dark theme background */
+            color: #e2e8f0; /* Dark theme text color */
+        }
+        body.dark-theme .header {
+            background-color: #2d3748; /* Dark theme header */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-theme .panel {
+            background-color: #2d3748;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        body.dark-theme .panel-header {
+            background-color: #4a5568; /* Dark theme panel header */
+            border-color: #2d3748;
+            color: #e2e8f0;
+        }
+        body.dark-theme .code-editor-content {
+            color: #e2e8f0; /* Prism-tomorrow is already dark, but this ensures consistency */
+        }
+        body.dark-theme iframe {
+            background-color: #1a202c; /* Dark theme iframe background */
+        }
+        body.dark-theme .settings-modal-content {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        body.dark-theme .settings-modal-content h2 {
+            color: #e2e8f0;
+        }
+        body.dark-theme .settings-group label {
+            color: #cbd5e0;
+        }
+        body.dark-theme .settings-group select,
+        body.dark-theme .settings-group input[type="range"] {
+            background-color: #4a5568;
+            border-color: #2d3748;
+            color: #e2e8f0;
+        }
+        body.dark-theme .settings-actions button.cancel {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        body.dark-theme .settings-actions button.cancel:hover {
+            background-color: #6a7588;
+        }
+        body.dark-theme .run-button-container {
+            background-color: #1a202c;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Blue Theme */
+        body.blue-theme {
+            background-color: #e0f2f7; /* Light blue background */
+            color: #2c5282; /* Darker blue text color */
+        }
+        body.blue-theme .header {
+            background-color: #bee3f8; /* Light blue header */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        body.blue-theme .panel {
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        body.blue-theme .panel-header {
+            background-color: #a7d9ed; /* Medium blue panel header */
+            border-color: #74b9d6;
+            color: #2c5282;
+        }
+        body.blue-theme .settings-modal-content {
+            background-color: #ffffff;
+            color: #333;
+        }
+        body.blue-theme .settings-modal-content h2 {
+            color: #333;
+        }
+        body.blue-theme .settings-group label {
+            color: #4a5568;
+        }
+        body.blue-theme .settings-group select,
+        body.blue-theme .settings-group input[type="range"] {
+            background-color: #e0f2f7;
+            border-color: #a7d9ed;
+            color: #2c5282;
+        }
+        body.blue-theme .settings-actions button.cancel {
+            background-color: #bfdef5;
+            color: #2c5282;
+        }
+        body.blue-theme .settings-actions button.cancel:hover {
+            background-color: #9cdbf3;
+        }
+
+        /* Pink Theme */
+        body.pink-theme {
+            background-color: #ffebeb; /* Light pink background */
+            color: #8b2b51; /* Darker pink text color */
+        }
+        body.pink-theme .header {
+            background-color: #fdd8ed; /* Light pink header */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        body.pink-theme .panel {
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        body.pink-theme .panel-header {
+            background-color: #fbcfe8; /* Medium pink panel header */
+            border-color: #f0a8c2;
+            color: #8b2b51;
+        }
+        body.pink-theme .settings-modal-content {
+            background-color: #ffffff;
+            color: #333;
+        }
+        body.pink-theme .settings-modal-content h2 {
+            color: #333;
+        }
+        body.pink-theme .settings-group label {
+            color: #4a5568;
+        }
+        body.pink-theme .settings-group select,
+        body.pink-theme .settings-group input[type="range"] {
+            background-color: #ffebeb;
+            border-color: #fbcfe8;
+            color: #8b2b51;
+        }
+        body.pink-theme .settings-actions button.cancel {
+            background-color: #fee2e2;
+            color: #8b2b51;
+        }
+        body.pink-theme .settings-actions button.cancel:hover {
+            background-color: #fcc9c9;
+        }
+
+        /* --- General Styles (apply to all themes unless overridden) --- */
+        .header {
+            position: fixed; /* Changed to fixed */
+            top: 0;
+            left: 0;
+            width: 100%; /* Ensure it spans full width */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem; /* Space between buttons */
+            align-items: center;
+        }
+
+        .panel-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden; /* Ensure panels don't overflow */
+            padding-top: 4rem; /* Added padding to account for fixed header height */
+        }
+
+        .panel {
+            position: absolute;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Hide content overflow within panel */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .panel-header {
+            cursor: grab;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid; /* Border color defined by theme */
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .panel-content {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow: auto; /* Allow scrolling for content */
+            position: relative;
+        }
+
+        /* Styling for the contenteditable code editor */
+        .code-editor-content {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            background-color: transparent;
+            color: inherit; /* Inherit text color from body/panel */
+            font-size: 1rem; /* Default font size */
+            line-height: 1.5;
+            padding: 0; /* Remove default padding */
+            font-family: 'Inter', monospace; /* Default monospace font */
+            overflow: auto; /* Enable scrolling for the editor content */
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            word-break: break-all; /* Break words to prevent horizontal scrolling */
+            min-height: 100px; /* Ensure editor has a minimum height */
+        }
+
+        /* Ensure Prism.js pre and code elements fill the container. Prism-tomorrow is dark by default. */
+        .code-editor-content pre {
+            margin: 0; /* Remove default pre margin */
+            padding: 0; /* Remove default pre padding */
+            background-color: transparent; /* Ensure transparent background */
+            font-family: inherit; /* Inherit font from parent */
+            font-size: inherit; /* Inherit font size from parent */
+            line-height: inherit; /* Inherit line height from parent */
+            min-height: 100%; /* Make them fill the parent */
+            outline: none; /* Remove outline on focus */
+        }
+
+        .code-editor-content code {
+            display: block; /* Make code element block-level to fill pre */
+            background-color: transparent; /* Ensure transparent background */
+            font-family: inherit; /* Inherit font from parent */
+            font-size: inherit; /* Inherit font size from parent */
+            line-height: inherit; /* Inherit line height from parent */
+            min-height: 100%; /* Make them fill the parent */
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #ffffff; /* Ensure iframe has a background, can be overridden by theme */
+        }
+
+        .resizer {
+            width: 10px;
+            height: 10px;
+            background-color: #cbd5e0;
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .resizer:hover {
+            opacity: 1;
+        }
+
+        .resizer.top-left { top: -5px; left: -5px; cursor: nwse-resize; }
+        .resizer.top-right { top: -5px; right: -5px; cursor: nesw-resize; }
+        .resizer.bottom-left { bottom: -5px; left: -5px; cursor: nesw-resize; }
+        .resizer.bottom-right { bottom: -5px; right: -5px; cursor: nwse-resize; }
+        .resizer.top { top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; width: 100%; height: 10px; border-radius: 0;}
+        .resizer.bottom { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; width: 100%; height: 10px; border-radius: 0;}
+        .resizer.left { left: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; height: 100%; width: 10px; border-radius: 0;}
+        .resizer.right { right: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize; height: 100%; width: 10px; border-radius: 0;}
+
+        .settings-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .settings-modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .settings-modal-content {
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .settings-modal-overlay.show .settings-modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .settings-modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .settings-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .settings-group select,
+        .settings-group input[type="range"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid; /* Border color defined by theme */
+            border-radius: 0.375rem;
+            appearance: none; /* Remove default select arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .settings-group select:focus,
+        .settings-group input[type="range"]:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+
+        .settings-group input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .settings-actions button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Specific styles for Save button (always blue) */
+        .settings-actions button.save {
+            background-color: #4299e1;
+            color: #ffffff;
+        }
+        .settings-actions button.save:hover {
+            background-color: #3182ce;
+        }
+
+
+        .run-button-container {
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            /* Default background for run button container */
+            background-color: #f0f2f5;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+            z-index: 99;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .run-button {
+            padding: 0.75rem 2rem;
+            background-color: #48bb78; /* Green (consistent across themes) */
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .run-button:hover {
+            background-color: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .run-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Initial panel positions and sizes */
+        #codePanel {
+            top: 20px;
+            left: 20px;
+            width: calc(50% - 30px); /* 50% width minus some margin */
+            height: calc(100% - 120px); /* Full height minus header and run button area */
+            z-index: 10;
+        }
+
+        #outputPanel {
+            top: 20px;
+            left: calc(50% + 10px); /* 50% width plus some margin */
+            width: calc(50% - 30px);
+            height: calc(100% - 120px);
+            z-index: 10;
+        }
+
+        /* --- New Theme Swatch Styles --- */
+        #themeOptions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .theme-swatch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid transparent;
+            border-radius: 9999px; /* Full rounded */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #f7fafc; /* Light default background */
+            color: #4a5568; /* Light default text */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Theme-specific swatch backgrounds and text colors */
+        .theme-swatch[data-theme="light"] {
+            background-color: #edf2f7;
+            color: #333;
+        }
+        .theme-swatch[data-theme="dark"] {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        .theme-swatch[data-theme="blue"] {
+            background-color: #bfdef5;
+            color: #2c5282;
+        }
+        .theme-swatch[data-theme="pink"] {
+            background-color: #fbcfe8;
+            color: #8b2b51;
+        }
+
+        .theme-swatch:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .theme-swatch.selected-swatch {
+            border-color: #4299e1; /* Blue border for selected */
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+            transform: translateY(0);
+        }
+
+        .swatch-color {
+            width: 1.25rem; /* w-5 */
+            height: 1.25rem; /* h-5 */
+            border-radius: 9999px; /* Full rounded */
+            border: 1px solid rgba(0,0,0,0.2); /* Small border for contrast */
+        }
+
+        /* Specific colors for the inner swatch circle */
+        .theme-swatch[data-theme="light"] .swatch-color { background-color: #f0f2f5; }
+        .theme-swatch[data-theme="dark"] .swatch-color { background-color: #1a202c; }
+        .theme-swatch[data-theme="blue"] .swatch-color { background-color: #e0f2f7; }
+        .theme-swatch[data-theme="pink"] .swatch-color { background-color: #ffebeb; }
+
+        /* --- New Font Preview Styles --- */
+        #fontOptions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .font-preview-swatch {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid transparent;
+            border-radius: 0.5rem; /* Slightly rounded */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #f7fafc; /* Light default background */
+            color: #4a5568; /* Light default text */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            min-width: 100px; /* Ensure enough space for font name */
+            justify-content: center;
+        }
+
+        .font-preview-swatch:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .font-preview-swatch.selected-swatch {
+            border-color: #4299e1; /* Blue border for selected */
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+            transform: translateY(0);
+        }
+
+        /* Media queries for smaller screens */
+        @media (max-width: 768px) {
+            .header {
+                position: relative; /* Revert to relative for mobile stacking */
+                padding: 0.75rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .panel-container {
+                padding-top: 0; /* Remove padding for mobile */
+                flex-direction: column;
+                overflow-y: auto; /* Allow scrolling if content overflows */
+                padding: 0 20px; /* Add horizontal padding */
+            }
+
+            #codePanel, #outputPanel {
+                position: relative; /* Stack panels vertically */
+                top: auto;
+                left: auto;
+                width: calc(100% - 40px); /* Full width minus margin */
+                height: 45vh; /* Half viewport height */
+                margin: 20px auto; /* Center with margin */
+            }
+
+            .run-button-container {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="light-theme">
+    <header class="header">
+        <h1 class="text-3xl font-extrabold text-gray-800 dark:text-gray-100 transition-colors duration-300">One stop HTML</h1>
+        <div class="header-actions">
+            <button id="downloadCodeBtn" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300 text-2xl" title="Download Code">
+                <i class="fas fa-download"></i>
+            </button>
+            <button id="settingsBtn" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300 text-2xl" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button id="helpBtn" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300 text-2xl" title="Help / Documentation">
+                <i class="fas fa-question-circle"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="panel-container">
+        <div id="codePanel" class="panel">
+            <div class="panel-header" data-panel="codePanel">
+                <span>Code Editor</span>
+                <div class="panel-actions flex gap-2">
+                    <button class="run-code-inline text-sm px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">Run</button>
+                </div>
+            </div>
+            <div class="panel-content">
+                <div id="htmlCodeEditor" contenteditable="true" spellcheck="false" class="code-editor-content">
+                    <pre><code class="language-html"></code></pre>
+                </div>
+            </div>
+            <div class="resizer top-left"></div>
+            <div class="resizer top-right"></div>
+            <div class="resizer bottom-left"></div>
+            <div class="resizer bottom-right"></div>
+            <div class="resizer top"></div>
+            <div class="resizer bottom"></div>
+            <div class="resizer left"></div>
+            <div class="resizer right"></div>
+        </div>
+
+        <div id="outputPanel" class="panel">
+            <div class="panel-header" data-panel="outputPanel">
+                <span>Output Preview</span>
+            </div>
+            <div class="panel-content">
+                <iframe id="outputFrame"></iframe>
+            </div>
+            <div class="resizer top-left"></div>
+            <div class="resizer top-right"></div>
+            <div class="resizer bottom-left"></div>
+            <div class="resizer bottom-right"></div>
+            <div class="resizer top"></div>
+            <div class="resizer bottom"></div>
+            <div class="resizer left"></div>
+            <div class="resizer right"></div>
+        </div>
+    </div>
+
+    <div class="run-button-container">
+        <button id="runAllCode" class="run-button">Run All Code</button>
+    </div>
+
+    <div id="settingsModalOverlay" class="settings-modal-overlay">
+        <div class="settings-modal-content">
+            <h2 class="text-gray-800 dark:text-gray-100">Settings</h2>
+
+            <div class="settings-group">
+                <label>Theme:</label>
+                <div id="themeOptions" class="flex items-center gap-2">
+                    <div class="theme-swatch" data-theme="light" data-bg-color="#f0f2f5" data-text-color="#333">
+                        <div class="swatch-color" style="background-color: #f0f2f5;"></div>
+                        <span>Light</span>
+                    </div>
+                    <div class="theme-swatch" data-theme="dark" data-bg-color="#1a202c" data-text-color="#e2e8f0">
+                        <div class="swatch-color" style="background-color: #1a202c;"></div>
+                        <span>Dark</span>
+                    </div>
+                    <div class="theme-swatch" data-theme="blue" data-bg-color="#e0f2f7" data-text-color="#2c5282">
+                        <div class="swatch-color" style="background-color: #e0f2f7;"></div>
+                        <span>Blue</span>
+                    </div>
+                    <div class="theme-swatch" data-theme="pink" data-bg-color="#ffebeb" data-text-color="#8b2b51">
+                        <div class="swatch-color" style="background-color: #ffebeb;"></div>
+                        <span>Pink</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label for="fontSizeRange">Font Size: <span id="fontSizeValue">16px</span></label>
+                <input type="range" id="fontSizeRange" min="12" max="24" value="16">
+            </div>
+
+            <div class="settings-group">
+                <label>Font:</label>
+                <div id="fontOptions" class="flex flex-wrap gap-2">
+                    <div class="font-preview-swatch" data-font="Inter, monospace" style="font-family: 'Inter', monospace;">
+                        <span>Inter</span>
+                    </div>
+                    <div class="font-preview-swatch" data-font="Fira Code, monospace" style="font-family: 'Fira Code', monospace;">
+                        <span>Fira Code</span>
+                    </div>
+                    <div class="font-preview-swatch" data-font="Source Code Pro, monospace" style="font-family: 'Source Code Pro', monospace;">
+                        <span>Source Code Pro</span>
+                    </div>
+                    <div class="font-preview-swatch" data-font="Roboto Mono, monospace" style="font-family: 'Roboto Mono', monospace;">
+                        <span>Roboto Mono</span>
+                    </div>
+                    <div class="font-preview-swatch" data-font="Cascadia Code, monospace" style="font-family: 'Cascadia Code', monospace;">
+                        <span>Cascadia Code</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-actions">
+                <button id="cancelSettingsBtn" class="cancel">Cancel</button>
+                <button id="saveSettingsBtn" class="save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for "One stop HTML"
+
+        // DOM Elements
+        const htmlCodeEditor = document.getElementById('htmlCodeEditor'); // The contenteditable div
+        const codeElement = htmlCodeEditor.querySelector('code'); // The actual code element inside for Prism
+        const outputFrame = document.getElementById('outputFrame');
+        const runAllCodeBtn = document.getElementById('runAllCode');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const downloadCodeBtn = document.getElementById('downloadCodeBtn');
+        const helpBtn = document.getElementById('helpBtn'); // New: Help button
+        const settingsModalOverlay = document.getElementById('settingsModalOverlay');
+        const cancelSettingsBtn = document.getElementById('cancelSettingsBtn');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+        const fontSizeRange = document.getElementById('fontSizeRange');
+        const fontSizeValueSpan = document.getElementById('fontSizeValue');
+        const panelContainer = document.querySelector('.panel-container');
+
+        // New theme and font option containers
+        const themeOptions = document.getElementById('themeOptions');
+        const fontOptions = document.getElementById('fontOptions');
+
+        // Initial settings
+        let currentSettings = {
+            theme: 'light', // Default theme
+            fontSize: 16,
+            fontFamily: 'Inter, monospace',
+        };
+
+        // --- Local Storage Functions ---
+
+        /**
+         * Saves the current code editor content to localStorage.
+         */
+        function saveCodeToLocalStorage() {
+            localStorage.setItem('oneStopHtmlCode', htmlCodeEditor.textContent);
+        }
+
+        /**
+         * Loads code from localStorage into the editor.
+         */
+        function loadCodeFromLocalStorage() {
+            const savedCode = localStorage.getItem('oneStopHtmlCode');
+            if (savedCode !== null) {
+                htmlCodeEditor.textContent = savedCode;
+            } else {
+                htmlCodeEditor.textContent = ''; // Ensure it's empty if no saved code
+            }
+        }
+
+        // --- Utility Functions ---
+
+        /**
+         * Applies the current settings to the UI.
+         */
+        function applySettings() {
+            // Apply theme
+            // Remove all theme classes first
+            document.body.classList.remove('light-theme', 'dark-theme', 'blue-theme', 'pink-theme');
+            // Add the selected theme class
+            document.body.classList.add(`${currentSettings.theme}-theme`);
+
+            // Visually select the correct theme swatch
+            document.querySelectorAll('.theme-swatch').forEach(swatch => {
+                if (swatch.dataset.theme === currentSettings.theme) {
+                    swatch.classList.add('selected-swatch');
+                } else {
+                    swatch.classList.remove('selected-swatch');
+                }
+            });
+
+            // Apply font size
+            htmlCodeEditor.style.fontSize = `${currentSettings.fontSize}px`;
+            fontSizeValueSpan.textContent = `${currentSettings.fontSize}px`;
+
+            // Apply font family
+            htmlCodeEditor.style.fontFamily = currentSettings.fontFamily;
+
+            // Visually select the correct font swatch
+            document.querySelectorAll('.font-preview-swatch').forEach(swatch => {
+                if (swatch.dataset.font === currentSettings.fontFamily) {
+                    swatch.classList.add('selected-swatch');
+                } else {
+                    swatch.classList.remove('selected-swatch');
+                }
+            });
+
+            // Update settings modal inputs to reflect current settings (only for range input)
+            fontSizeRange.value = currentSettings.fontSize;
+
+            // Re-highlight after font changes (font family/size can affect layout)
+            syncCodeAndHighlight();
+        }
+
+        /**
+         * Loads settings from localStorage or uses defaults.
+         */
+        function loadSettings() {
+            try {
+                const storedSettings = localStorage.getItem('oneStopHtmlSettings');
+                if (storedSettings) {
+                    const parsedSettings = JSON.parse(storedSettings);
+                    // Ensure the theme is one of the allowed values
+                    if (['light', 'dark', 'blue', 'pink'].includes(parsedSettings.theme)) {
+                         currentSettings.theme = parsedSettings.theme;
+                    }
+                    currentSettings.fontSize = parsedSettings.fontSize || currentSettings.fontSize;
+                    currentSettings.fontFamily = parsedSettings.fontFamily || currentSettings.fontFamily;
+                }
+            } catch (e) {
+                console.error("Failed to load settings from localStorage:", e);
+                // Fallback to default settings if parsing fails
+            }
+            applySettings(); // Apply settings after loading them
+        }
+
+        /**
+         * Saves current settings to localStorage.
+         */
+        function saveSettings() {
+            try {
+                localStorage.setItem('oneStopHtmlSettings', JSON.stringify(currentSettings));
+            } catch (e) {
+                console.error("Failed to save settings to localStorage:", e);
+            }
+        }
+
+        /**
+         * Runs the HTML code in the editor and displays it in the iframe.
+         */
+        function runCode() {
+            const code = htmlCodeEditor.textContent; // Get plain text content from the editor div
+            // Use srcdoc to safely embed HTML content
+            outputFrame.srcdoc = code;
+        }
+
+        /**
+         * Downloads the code from the editor as an HTML file.
+         */
+        function downloadCode() {
+            const code = htmlCodeEditor.textContent;
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'my_html_code.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // Clean up the URL object
+        }
+
+        // --- Draggable/Resizable Panels Logic ---
+
+        let activePanel = null;
+        let isDragging = false;
+        let isResizing = false;
+        let initialX, initialY, initialWidth, initialHeight, initialLeft, initialTop;
+        let resizeDirection = '';
+
+        /**
+         * Initializes drag and resize listeners for a given panel.
+         * @param {HTMLElement} panel - The panel element.
+         */
+        function makePanelDraggableAndResizable(panel) {
+            const header = panel.querySelector('.panel-header');
+            const resizers = panel.querySelectorAll('.resizer');
+
+            // Dragging
+            header.addEventListener('mousedown', (e) => {
+                // Prevent dragging if clicking on an inline run button
+                if (e.target.classList.contains('run-code-inline')) {
+                    return;
+                }
+                isDragging = true;
+                activePanel = panel;
+                initialX = e.clientX;
+                initialY = e.clientY;
+                initialLeft = panel.offsetLeft;
+                initialTop = panel.offsetTop;
+                // Bring the active panel to the front
+                document.querySelectorAll('.panel').forEach(p => p.style.zIndex = 10);
+                panel.style.zIndex = 20;
+                panel.style.cursor = 'grabbing';
+            });
+
+            // Resizing
+            resizers.forEach(resizer => {
+                resizer.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    activePanel = panel;
+                    resizeDirection = Array.from(resizer.classList).find(cls => cls !== 'resizer');
+                    initialX = e.clientX;
+                    initialY = e.clientY;
+                    initialWidth = panel.offsetWidth;
+                    initialHeight = panel.offsetHeight;
+                    initialLeft = panel.offsetLeft;
+                    initialTop = panel.offsetTop;
+                    // Bring the active panel to the front
+                    document.querySelectorAll('.panel').forEach(p => p.style.zIndex = 10);
+                    panel.style.zIndex = 20;
+                    e.preventDefault(); // Prevent text selection during resize
+                });
+            });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && activePanel) {
+                const dx = e.clientX - initialX;
+                const dy = e.clientY - initialY;
+
+                let newLeft = initialLeft + dx;
+                let newTop = initialTop + dy;
+
+                // Keep panel within container bounds
+                const containerRect = panelContainer.getBoundingClientRect();
+                const panelRect = activePanel.getBoundingClientRect();
+
+                newLeft = Math.max(0, Math.min(newLeft, containerRect.width - panelRect.width));
+                newTop = Math.max(0, Math.min(newTop, containerRect.height - panelRect.height));
+
+                activePanel.style.left = `${newLeft}px`;
+                activePanel.style.top = `${newTop}px`;
+            } else if (isResizing && activePanel) {
+                const dx = e.clientX - initialX;
+                const dy = e.clientY - initialY;
+
+                let newWidth = initialWidth;
+                let newHeight = initialHeight;
+                let newLeft = initialLeft;
+                let newTop = initialTop;
+
+                const minWidth = 200;
+                const minHeight = 150;
+
+                switch (resizeDirection) {
+                    case 'top-left':
+                        newWidth = Math.max(minWidth, initialWidth - dx);
+                        newHeight = Math.max(minHeight, initialHeight - dy);
+                        newLeft = initialLeft + (initialWidth - newWidth);
+                        newTop = initialTop + (initialHeight - newHeight);
+                        break;
+                    case 'top-right':
+                        newWidth = Math.max(minWidth, initialWidth + dx);
+                        newHeight = Math.max(minHeight, initialHeight - dy);
+                        newTop = initialTop + (initialHeight - newHeight);
+                        break;
+                    case 'bottom-left':
+                        newWidth = Math.max(minWidth, initialWidth - dx);
+                        newHeight = Math.max(minHeight, initialHeight + dy);
+                        newLeft = initialLeft + (initialWidth - newWidth);
+                        break;
+                    case 'bottom-right':
+                        newWidth = Math.max(minWidth, initialWidth + dx);
+                        newHeight = Math.max(minHeight, initialHeight + dy);
+                        break;
+                    case 'top':
+                        newHeight = Math.max(minHeight, initialHeight - dy);
+                        newTop = initialTop + (initialHeight - newHeight);
+                        break;
+                    case 'bottom':
+                        newHeight = Math.max(minHeight, initialHeight + dy);
+                        break;
+                    case 'left':
+                        newWidth = Math.max(minWidth, initialWidth - dx);
+                        newLeft = initialLeft + (initialWidth - newWidth);
+                        break;
+                    case 'right':
+                        newWidth = Math.max(minWidth, initialWidth + dx);
+                        break;
+                }
+
+                activePanel.style.width = `${newWidth}px`;
+                activePanel.style.height = `${newHeight}px`;
+                activePanel.style.left = `${newLeft}px`;
+                activePanel.style.top = `${newTop}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (activePanel) {
+                activePanel.style.cursor = 'default';
+            }
+            isDragging = false;
+            isResizing = false;
+            activePanel = null;
+            resizeDirection = '';
+        });
+
+        // Initialize draggable/resizable for both panels
+        makePanelDraggableAndResizable(document.getElementById('codePanel'));
+        makePanelDraggableAndResizable(document.getElementById('outputPanel'));
+
+        /**
+         * Saves the current cursor position/selection in a contenteditable div
+         * by storing character offsets relative to the entire plain text content.
+         * This is robust against DOM changes (like Prism.js highlighting).
+         * @param {HTMLElement} element - The contenteditable element (e.g., htmlCodeEditor).
+         * @returns {object|null} - An object containing start and end character offsets, or null if no selection.
+         */
+        function saveSelection(element) {
+            const selection = window.getSelection();
+            if (selection.rangeCount === 0) return null;
+
+            const range = selection.getRangeAt(0);
+            const preNode = element.querySelector('pre');
+            if (!preNode) return null;
+
+            // Create a temporary range to get the plain text content up to the selection start/end
+            const tempRange = document.createRange();
+            tempRange.selectNodeContents(preNode); // Select all content of the pre node
+
+            // Calculate start offset
+            tempRange.setEnd(range.startContainer, range.startOffset);
+            const startOffset = tempRange.toString().length;
+
+            // Calculate end offset
+            tempRange.selectNodeContents(preNode); // Reset tempRange
+            tempRange.setEnd(range.endContainer, range.endOffset);
+            const endOffset = tempRange.toString().length;
+
+            return { startOffset, endOffset };
+        }
+
+        /**
+         * Restores the cursor position/selection in a contenteditable div
+         * based on saved character offsets. This is robust against DOM changes.
+         * @param {HTMLElement} element - The contenteditable element (e.g., htmlCodeEditor).
+         * @param {object} savedSelection - The object containing start and end character offsets.
+         */
+        function restoreSelection(element, savedSelection) {
+            if (!savedSelection) return;
+
+            const preNode = element.querySelector('pre');
+            if (!preNode) return;
+
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+
+            const range = document.createRange();
+            let currentOffset = 0;
+            let startNode = null;
+            let startOffsetInNode = 0;
+            let endNode = null;
+            let endOffsetInNode = 0;
+
+            // Use TreeWalker to iterate through text nodes only
+            const walker = document.createTreeWalker(preNode, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+
+            while ((node = walker.nextNode())) {
+                const nodeLength = node.nodeValue.length;
+
+                // Check for start of selection
+                if (savedSelection.startOffset >= currentOffset && savedSelection.startOffset <= currentOffset + nodeLength) {
+                    startNode = node;
+                    startOffsetInNode = savedSelection.startOffset - currentOffset;
+                }
+                // Check for end of selection
+                if (savedSelection.endOffset >= currentOffset && savedSelection.endOffset <= currentOffset + nodeLength) {
+                    endNode = node;
+                    endOffsetInNode = savedSelection.endOffset - currentOffset;
+                }
+                currentOffset += nodeLength;
+
+                // If both found, we can stop early
+                if (startNode && endNode) break;
+            }
+
+            // If start and end containers are found, set the range
+            if (startNode && endNode) {
+                range.setStart(startNode, startOffsetInNode);
+                range.setEnd(endNode, endOffsetInNode);
+                selection.addRange(range);
+            } else {
+                // Fallback: if unable to restore precisely (e.g., content was deleted), place cursor at the end
+                range.selectNodeContents(preNode);
+                range.collapse(false); // Collapse to the end
+                selection.addRange(range);
+            }
+        }
+
+
+        /**
+         * Synchronizes the content of the editor div with its inner code element
+         * and applies syntax highlighting, then restores cursor position.
+         */
+        function syncCodeAndHighlight() {
+            const savedSel = saveSelection(htmlCodeEditor); // Save cursor before updating
+
+            // Get plain text content from the contenteditable div
+            const plainText = htmlCodeEditor.textContent;
+
+            // Update the code element's text content
+            codeElement.textContent = plainText;
+
+            // Apply Prism.js highlighting
+            Prism.highlightElement(codeElement);
+
+            // Restore cursor after highlighting (this will operate on the new DOM)
+            restoreSelection(htmlCodeEditor, savedSel);
+        }
+
+
+        // --- Event Listeners ---
+
+        // Run code on button click
+        runAllCodeBtn.addEventListener('click', runCode);
+
+        // Run code on inline button click (delegated)
+        document.querySelectorAll('.panel-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                if (e.target.classList.contains('run-code-inline')) {
+                    runCode();
+                }
+            });
+        });
+
+        // Open settings modal
+        settingsBtn.addEventListener('click', () => {
+            // Visually select the current theme and font when opening the modal
+            document.querySelectorAll('.theme-swatch').forEach(swatch => {
+                if (swatch.dataset.theme === currentSettings.theme) {
+                    swatch.classList.add('selected-swatch');
+                } else {
+                    swatch.classList.remove('selected-swatch');
+                }
+            });
+            document.querySelectorAll('.font-preview-swatch').forEach(swatch => {
+                if (swatch.dataset.font === currentSettings.fontFamily) {
+                    swatch.classList.add('selected-swatch');
+                } else {
+                    swatch.classList.remove('selected-swatch');
+                }
+            });
+
+            fontSizeRange.value = currentSettings.fontSize;
+            fontSizeValueSpan.textContent = `${currentSettings.fontSize}px`;
+
+            settingsModalOverlay.classList.add('show');
+        });
+
+        // Close settings modal on cancel or overlay click
+        cancelSettingsBtn.addEventListener('click', () => {
+            settingsModalOverlay.classList.remove('show');
+        });
+        settingsModalOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsModalOverlay) {
+                settingsModalOverlay.classList.remove('show');
+            }
+        });
+
+        // Handle theme swatch clicks
+        themeOptions.addEventListener('click', (e) => {
+            const clickedSwatch = e.target.closest('.theme-swatch');
+            if (clickedSwatch) {
+                currentSettings.theme = clickedSwatch.dataset.theme;
+                // Update visual selection immediately in modal
+                document.querySelectorAll('.theme-swatch').forEach(swatch => {
+                    swatch.classList.remove('selected-swatch');
+                });
+                clickedSwatch.classList.add('selected-swatch');
+            }
+        });
+
+        // Handle font preview swatch clicks
+        fontOptions.addEventListener('click', (e) => {
+            const clickedSwatch = e.target.closest('.font-preview-swatch');
+            if (clickedSwatch) {
+                currentSettings.fontFamily = clickedSwatch.dataset.font;
+                // Update visual selection immediately in modal
+                document.querySelectorAll('.font-preview-swatch').forEach(swatch => {
+                    swatch.classList.remove('selected-swatch');
+                });
+                clickedSwatch.classList.add('selected-swatch');
+            }
+        });
+
+        // Save settings
+        saveSettingsBtn.addEventListener('click', () => {
+            currentSettings.fontSize = parseInt(fontSizeRange.value);
+            // Theme and Font Family are already updated by their respective click handlers
+            applySettings();
+            saveSettings();
+            settingsModalOverlay.classList.remove('show');
+        });
+
+        // Update font size value display as range is dragged
+        fontSizeRange.addEventListener('input', () => {
+            fontSizeValueSpan.textContent = `${fontSizeRange.value}px`;
+        });
+
+        // Autocompletion and highlighting event listener for the contenteditable div
+        htmlCodeEditor.addEventListener('input', () => {
+            saveCodeToLocalStorage(); // Auto-save on every input
+            syncCodeAndHighlight(); // Highlight the code (updates DOM)
+        });
+
+        // Event listener for Download Code button
+        downloadCodeBtn.addEventListener('click', downloadCode);
+
+        // New: Event listener for Help button
+        helpBtn.addEventListener('click', () => {
+            window.open('https://onestophtml.blogspot.com/', '_blank');
+        });
+
+        // Initial setup
+        window.addEventListener('load', () => {
+            loadSettings(); // Load and apply settings on page load
+            loadCodeFromLocalStorage(); // Load saved code
+            syncCodeAndHighlight(); // Initial highlight for the loaded/empty content
+            runCode(); // Run initial code to set up iframe
+        });
+
+        // Responsive panel adjustment on window resize (for non-mobile layout)
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                // Reset to default split view if resized from mobile to desktop
+                const codePanel = document.getElementById('codePanel');
+                const outputPanel = document.getElementById('outputPanel');
+
+                codePanel.style.top = '20px';
+                codePanel.style.left = '20px';
+                codePanel.style.width = `calc(50% - 30px)`;
+                codePanel.style.height = `calc(100% - 120px)`;
+
+                outputPanel.style.top = '20px';
+                outputPanel.style.left = `calc(50% + 10px)`;
+                outputPanel.style.width = `calc(50% - 30px)`;
+                outputPanel.style.height = `calc(100% - 120px)`;
+
+                // Ensure z-index is reset
+                codePanel.style.zIndex = 10;
+                outputPanel.style.zIndex = 10;
+
+                // Ensure header is fixed
+                document.querySelector('.header').style.position = 'fixed';
+                document.querySelector('.panel-container').style.paddingTop = '4rem';
+            } else {
+                // For mobile, revert header to relative positioning
+                document.querySelector('.header').style.position = 'relative';
+                // Remove padding from panel-container as header is no longer fixed
+                document.querySelector('.panel-container').style.paddingTop = '0';
+            }
+        });
+
+    </script>
+</body>
+</html>
